@@ -21,31 +21,43 @@ def home(request):
 @csrf_exempt 
 def get_emotion(request):
     if request.method == 'POST':
+        data = {}
         image = _grab_image(stream=request.FILES["file"])
-
+        while image.shape[0] > 600 and image.shape[1] > 600:
+            image = cv2.resize(image, (image.shape[0] // 2, image.shape[1] // 2))
+        print(image.shape)
         face_locations = face_recognition.face_locations(image)
-        
-        top, right, bottom, left = face_locations[0]
-        face_image = image[top:bottom, left:right]
-        gray_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+        if (len(face_locations) < 1):
+            data = {
+                'error': 'No face was found in the image',
+            }
+        else:
+            try:
+                top, right, bottom, left = face_locations[0]
+                face_image = image[top:bottom, left:right]
+                gray_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
 
-        image = cv2.resize(gray_image, (48,48))
+                image = cv2.resize(gray_image, (48,48))
 
-        image = image.reshape(1, 48, 48, 1)
+                image = image.reshape(1, 48, 48, 1)
 
 
-        model = load_model('model.h5')
+                model = load_model('model.h5')
 
-        predictions = model.predict(image)
+                predictions = model.predict(image)
 
-        max_index = np.argmax(predictions)
+                max_index = np.argmax(predictions)
 
-        emotion_detection = ('angry', 'happy', 'sad', 'neutral')
-        emotion_prediction = emotion_detection[max_index] 
-        
-        data = {
-            'emotion': emotion_prediction,
-        }
+                emotion_detection = ('angry', 'happy', 'sad', 'neutral')
+                emotion_prediction = emotion_detection[max_index] 
+                
+                data = {
+                    'emotion': emotion_prediction,
+                }
+            except:
+                data = {
+                    'error': 'An error occurred, try again',
+                }
 
         return JsonResponse(data)
 

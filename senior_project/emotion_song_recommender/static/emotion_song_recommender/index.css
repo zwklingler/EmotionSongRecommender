@@ -78,9 +78,37 @@ input[type="range"] {
   width:350px;
 }
 
-.form
+.form_container
 {
   text-align: center;
   margin: auto;
   width: "50px";
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin: auto;
+  visibility: hidden;
+  background: white;
+  max-width: 250px;
+}
+
+.preview {
+  max-width: 500px;
+  max-height: 500px;
+  border: solid black 2px;
+  visibility: hidden;
+}
+
+.spinner {
+  display: none;
+}
+
+.song_results {
+
+}
+.song {
+  width: 100px;
+  color: black;
 }

@@ -3,38 +3,7 @@
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        function upload()
-        {
-           /* $.post('/get_emotion/',
-                function(data, status){
-                    alert("Data: " + data.emotion + "\nStatus: " + status);
-                }
-            )*/
-        var fd = new FormData();
-        var files = $('#image_file')[0].files;
-        
-        // Check file selected or not
-        if(files.length > 0 ){
-           fd.append('file', files[0]);
-
-           $.ajax({
-              url: '/get_emotion/',
-              type: 'POST',
-              data: fd,
-              dataType: "json",
-              contentType: false,
-              processData: false,
-              success: function(data, status){
-                alert("Data: " + data.emotion + "\nStatus: " + status);
-                 }
-              });
-            }
-        else{
-           alert("Please select a file.");
-        }
-      }
-    </script>
+    <script src="{% static 'emotion_song_recommender/index.js' %}"></script>
     <title>Emotion Song Recommender</title>
     <link rel="stylesheet" type="text/css" href="{% static 'emotion_song_recommender/index.css' %}">
     
@@ -69,15 +38,20 @@
       
       
       <div class="content">
-        <div class="form" method="post" enctype="multipart/form-data">
+        <br>
+        <img class="preview" id="preview">
+        <div class="form_container" method="post" enctype="multipart/form-data">
           <form id="class_upload">
-            <input type="file" class="image_file" id="image_file" name="image_file" accept=".png, .jpg, .jpeg">
+            <br>
+            <input type="file" class="image_file" id="image_file" name="image_file" accept=".png, .jpg, .jpeg" onchange="load_file(event)">
             <br>
             <br>
             <input type="button" onclick="upload()" id="upload_button"  name="upload_button" value="Upload">
-            
+            <p class="error" id="error"></p>
           </form>
+          <img id="spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px" width="100px">
         </div>
+        <div class="song_results" id="song_results"></div>
       </div>
       
       
