@@ -1,3 +1,7 @@
+html {
+
+}
+
 body{
   text-align: center;
   background: linear-gradient(#00BBFF, #0033CC);
@@ -11,9 +15,10 @@ body{
   grid-template-areas:
     "header header header"
     "lside content content"
-    "footer footer footer";
+    "lside content content";
 
-  grid-template-columns: 400px 1fr 400px;
+  /*grid-template-columns: 400px 1fr 400px;*/
+  grid-template-columns: 275px 1fr 400px;
   grid-template-rows: auto 1fr auto;
   /*grid-gap: 10px;*/
 
@@ -72,6 +77,13 @@ input {
 
 .settings_text {
   margin: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  max-width: 90%;
+}
+
+.settings {
+  max-width: 90%
 }
 
 input[type="range"] {
@@ -95,8 +107,8 @@ input[type="range"] {
 }
 
 .preview {
-  max-width: 500px;
-  max-height: 500px;
+  max-width: 30%;
+  max-height: 30%;
   border: solid black 2px;
   visibility: hidden;
 }
@@ -105,10 +117,116 @@ input[type="range"] {
   display: none;
 }
 
-.song_results {
-
-}
-.song {
-  width: 100px;
+.track_name_title {
+  box-sizing: border-box;
+  width: 45%;
   color: black;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: white;
+  border: solid black 1px;
+  text-align: left;
+  float: left;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.track_artist_title {
+  box-sizing: border-box;
+  width: 45%;
+  color: black;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: white;
+  border: solid black 1px;
+  text-align: left;
+  float: left;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.track_count_title {
+  box-sizing: border-box;
+  width: 10%;
+  color: black;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: white;
+  border: solid black 1px;
+  text-align: left;
+  float: left;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.track_name {
+  box-sizing: border-box;
+  width: 45%;
+  color: black;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: white;
+  border: solid black 1px;
+  text-align: left;
+  float: left;
+  overflow: hidden;
+}
+
+.track_artist {
+  box-sizing: border-box;
+  width: 45%;
+  color: black;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: white;
+  border: solid black 1px;
+  text-align: left;
+  float: left;
+  overflow: hidden;
+}
+
+.track_count {
+  box-sizing: border-box;
+  width: 10%;
+  color: black;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: white;
+  border: solid black 1px;
+  text-align: left;
+  float: left;
+  overflow: hidden;
+}
+
+.song {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  display: block;
+}
+
+.song_title {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  display: block;
+}
+
+.song_results {
+  overflow-y: auto;
+  position: relative;
+  max-height: 50%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.song:hover > * {
+  background-color: lightgray;
+  cursor: pointer;
 }
