@@ -5,13 +5,15 @@ function upload() {
 
     var fd = new FormData();
     var files = $('#image_file')[0].files;
+    var popularity = document.getElementById('popularity').value;
 
     // Check file selected or not
     if (files.length > 0) {
         fd.append('file', files[0]);
+        fd.append('popularity', popularity)
 
         $.ajax({
-            url: '/get_emotion/',
+            url: '/get_emotion_songs/',
             type: 'POST',
             data: fd,
             dataType: "json",
@@ -28,6 +30,9 @@ function upload() {
                     // Create titles
                     if (data.songs.tracks.length > 0)
                     {
+                        var emotionPrediction = data.emotion
+                        document.getElementById("emotion_prediction").innerText =  emotionPrediction.charAt(0).toUpperCase() + emotionPrediction.slice(1);
+
                         let div = document.createElement("div");
                         div.setAttribute("class", "song_title");
 
@@ -46,47 +51,56 @@ function upload() {
                         artistTitle.textContent = "Track Artist"
                         div.appendChild(artistTitle)
 
-                        document.getElementById("song_results").appendChild(div);                    
-
-
+                        document.getElementById("song_results").appendChild(div);
+                        var useExplicit = document.getElementById('explicit').checked                 
+                        
+                        var songCount = 0;
                         for(var i = 0; i < data.songs.tracks.length; i++) {
                             let track = data.songs.tracks[i]
-                        
-                            div = document.createElement("div")
-                            div.setAttribute("class", "song");
+                            console.log(track.explicit)
 
-                            // Track count
-                            let count = document.createElement("span");
-                            count.setAttribute("class", "track_count");
-                            count.textContent = i + 1;
-                            div.appendChild(count)
-
-                            // Track name
-                            let trackName = document.createElement("span")
-                            trackName.setAttribute("class", "track_name");
-                            trackName.textContent = track.name
-                            div.appendChild(trackName)
-                            
-                            // Track artist
-                            let trackArtist = document.createElement("span")
-                            trackArtist.setAttribute("class", "track_artist");
-                            for (var j = 0; j < track.artists.length; j++)
+                            if (useExplicit == true || (useExplicit == false && track.explicit == false))
                             {
-                                if (j != 0)
+                                songCount += 1
+                                div = document.createElement("div")
+                                div.setAttribute("class", "song");
+
+                                // Track count
+                                let count = document.createElement("span");
+                                count.setAttribute("class", "track_count");
+                                count.textContent = songCount;
+                                div.appendChild(count)
+
+                                // Track name
+                                let trackName = document.createElement("span")
+                                trackName.setAttribute("class", "track_name");
+                                trackName.textContent = track.name
+                                // Add On Click
+                                trackName.onclick = function()
                                 {
-                                    trackArtist.textContent += ", "
+                                    take_to_page(track.external_urls.spotify);
                                 }
-                                trackArtist.textContent += track.artists[j].name
-                            }
-                            div.appendChild(trackArtist)
-                            
-                            // Add onclick
-                            div.onclick = function()
-                            {
-                                take_to_page(track.external_urls.spotify);
-                            }
+                                div.appendChild(trackName)
+                                
+                                // Track artist
+                                let trackArtist = document.createElement("span")
+                                trackArtist.setAttribute("class", "track_artist");
+                                for (var j = 0; j < track.artists.length; j++)
+                                {
+                                    if (j != 0)
+                                    {
+                                        trackArtist.textContent += ", "
+                                    }
+                                    trackArtist.textContent += track.artists[j].name
+                                }
+                                trackArtist.onclick = function()
+                                {
+                                    take_to_page(track.artists[0].external_urls.spotify);
+                                }
+                                div.appendChild(trackArtist)
 
-                            document.getElementById("song_results").appendChild(div);                    
+                                document.getElementById("song_results").appendChild(div); 
+                            }                   
                         }
                         /*
                         span = document.createElement("span")
@@ -135,6 +149,7 @@ function reset_songs() {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
     }
+    document.getElementById("emotion_prediction").innerText = ""
 }
 
 // Take user to the passed in link

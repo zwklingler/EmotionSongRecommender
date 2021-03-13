@@ -118,14 +118,16 @@ input[type="range"] {
 }
 
 .track_name_title {
+  padding-top: 0px;
+  margin-top: 0px;
   box-sizing: border-box;
   width: 45%;
-  color: black;
   display: inline;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: white;
-  border: solid black 1px;
+  color: white;
+  background-color: #0033CC;
+  border: solid white 1px;
   text-align: left;
   float: left;
   font-weight: bold;
@@ -133,14 +135,16 @@ input[type="range"] {
 }
 
 .track_artist_title {
+  padding-top: 0px;
+  margin-top: 0px;
   box-sizing: border-box;
   width: 45%;
-  color: black;
   display: inline;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: white;
-  border: solid black 1px;
+  color: white;
+  background-color: #0033CC;
+  border: solid white 1px;
   text-align: left;
   float: left;
   font-weight: bold;
@@ -148,14 +152,16 @@ input[type="range"] {
 }
 
 .track_count_title {
+  padding-top: 0px;
+  margin-top: 0px;
   box-sizing: border-box;
   width: 10%;
-  color: black;
   display: inline;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: white;
-  border: solid black 1px;
+  color: white;
+  background-color: #0033CC;
+  border: solid white 1px;
   text-align: left;
   float: left;
   font-weight: bold;
@@ -165,12 +171,12 @@ input[type="range"] {
 .track_name {
   box-sizing: border-box;
   width: 45%;
-  color: black;
   display: inline;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: white;
-  border: solid black 1px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
   text-align: left;
   float: left;
   overflow: hidden;
@@ -179,12 +185,12 @@ input[type="range"] {
 .track_artist {
   box-sizing: border-box;
   width: 45%;
-  color: black;
   display: inline;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: white;
-  border: solid black 1px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
   text-align: left;
   float: left;
   overflow: hidden;
@@ -193,12 +199,12 @@ input[type="range"] {
 .track_count {
   box-sizing: border-box;
   width: 10%;
-  color: black;
   display: inline;
   padding-left: 5px;
   padding-right: 5px;
-  background-color: white;
-  border: solid black 1px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
   text-align: left;
   float: left;
   overflow: hidden;
@@ -221,12 +227,24 @@ input[type="range"] {
 .song_results {
   overflow-y: auto;
   position: relative;
-  max-height: 50%;
+  max-height: 45%;
   margin-left: 5%;
   margin-right: 5%;
+  padding-top: 0px;
+  margin-top: 0px;
 }
 
-.song:hover > * {
-  background-color: lightgray;
+.track_artist:hover {
+  background-color: #0033CC;
   cursor: pointer;
+}
+
+.track_name:hover {
+  background-color: #0033CC;
+  cursor: pointer;
+}
+
+.emotion_prediction {
+  color: white;
+  text-align: center;
 }

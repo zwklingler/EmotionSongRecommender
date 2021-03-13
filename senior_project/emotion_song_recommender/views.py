@@ -31,14 +31,21 @@ def home(request):
     return render(request, 'emotion_song_recommender/index.html')
 
 @csrf_exempt 
-def get_emotion(request):
+def search_songs(request):
+    if request.method == 'POST':
+        print("SUCCESS")
+
+@csrf_exempt 
+def get_emotion_songs(request):
     if request.method == 'POST':
 
         data = {}
+        popularity = request.POST.get('popularity')
+
         image = _grab_image(stream=request.FILES["file"])
         while image.shape[0] > 500 and image.shape[1] > 500:
             image = cv2.resize(image, (image.shape[0] // 2, image.shape[1] // 2))
-        print(image.shape)
+
         face_locations = face_recognition.face_locations(image)
         if (len(face_locations) < 1):
             data = {
@@ -64,10 +71,11 @@ def get_emotion(request):
                 emotion_detection = ('angry', 'happy', 'sad', 'neutral')
                 emotion_prediction = emotion_detection[max_index] 
                 
-                song_data = get_songs(request, emotion_prediction)
+                song_data = get_songs(request, emotion_prediction, popularity)
                 
                 data = {
-                    'songs': song_data
+                    'songs': song_data,
+                    'emotion': emotion_prediction
                 }
                 '''
                 data = {
@@ -156,7 +164,7 @@ def get_parameters(emotion):
 
     return valence, tempo, energy
 
-def get_songs(request, emotion):
+def get_songs(request, emotion, popularity):
     # load yml file with hidden variables into dictionary
     constants = yaml.load(open('./constants.yml'), Loader=yaml.Loader)
 
@@ -187,7 +195,7 @@ def get_songs(request, emotion):
     #endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
 
     valence, tempo, energy = get_parameters(emotion)
-    data = urlencode({"seed_genres": "rock", "target_valence": valence, "target_tempo": tempo, "target_popularity": 100, "target_energy": energy, "limit": 25, "max_liveness": 0.35})
+    data = urlencode({"seed_genres": "rock", "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35})
 
     lookup_url = f"{endpoint}?{data}"
     r = requests.get(lookup_url, headers=headers)

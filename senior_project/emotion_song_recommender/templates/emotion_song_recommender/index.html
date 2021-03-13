@@ -22,16 +22,16 @@
       
       <div class="lside">
         <h3 class="settings_text">Song Popularity</h3>
-        <input class="settings" type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        <input class="settings" type="range" min="1" max="100" value="100" class="slider" id="popularity">
         <br><br>
         
         <h3 class="settings_text">Allow Explicit Songs</h3>
-        <input class="settings" type="checkbox" id="explicit" name="explicit" value="explicit">
+        <input class="settings" type="checkbox" id="explicit" name="explicit" value="explicit" checked>
         <br><br>
         
-        <h3 class="settings_text">Enter Songs, Artists, or Genres to Base Recommended Songs From</h3>
+        <h3 class="settings_text">Enter Songs to Base Recommended Songs From</h3>
         <input class="settings" type="text" placeholder="Song, Artist, or Genre">
-        <input class="settings" type="button" value="Add">
+        <input class="settings" type="button" value="Search">
         
 
       </div>
@@ -51,6 +51,7 @@
           </form>
           <img id="spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px" width="100px">
         </div>
+        <div class="emotion_prediction" id="emotion_prediction"></div>
         <div class="song_results" id="song_results"></div>
       </div>
       
