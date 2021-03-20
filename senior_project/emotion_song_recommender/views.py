@@ -26,14 +26,60 @@ import json
 import numpy as np
 from .spotifyAPI import spotifyAPI
 
-
 def home(request):
     return render(request, 'emotion_song_recommender/index.html')
 
 @csrf_exempt 
-def search_songs(request):
+def search(request):
     if request.method == 'POST':
-        print("SUCCESS")
+        data = {}
+
+        song_data = ''
+        artist_data = ''
+        genre_data = ''
+        data = {}
+
+
+        try:
+            search_by = request.POST.get('search_by')
+            search_text = request.POST.get('search_text')
+            data = {}
+            if (search_text != None and search_by != None):
+                if (search_by == 'song'):
+                    song_data = search_songs(request, search_text)
+                    data = {
+                        'songs': song_data,
+                    }
+                elif (search_by == 'artist'):
+                    artist_data = search_artists(request, search_text)
+                    data = {
+                        'artists': artist_data,
+                    }
+                else:
+                    genres = search_genres(request)
+                    genre_data = []
+                    for genre in genres['genres']:
+                        if (search_text.lower() in genre):
+                            genre_data.append(genre)
+                    data = {
+                        'genres': genre_data
+                    }
+
+               
+            else:
+                data = {
+                    'error': 'Enter data to search.'
+                }        
+        except:
+            data = {
+                'error': 'An Error Occurred. Try again.'
+            }
+        if bool(data) == False:
+            data = {
+                'error': 'No results were found. Try again.'
+            }
+        
+        return JsonResponse(data)
 
 @csrf_exempt 
 def get_emotion_songs(request):
@@ -41,6 +87,11 @@ def get_emotion_songs(request):
 
         data = {}
         popularity = request.POST.get('popularity')
+
+        genres = json.loads(request.POST.get('genres'))
+        songs = json.loads(request.POST.get('songs'))
+        artists = json.loads(request.POST.get('artists'))
+        
 
         image = _grab_image(stream=request.FILES["file"])
         while image.shape[0] > 500 and image.shape[1] > 500:
@@ -71,7 +122,7 @@ def get_emotion_songs(request):
                 emotion_detection = ('angry', 'happy', 'sad', 'neutral')
                 emotion_prediction = emotion_detection[max_index] 
                 
-                song_data = get_songs(request, emotion_prediction, popularity)
+                song_data = get_songs(request, emotion_prediction, popularity, genres, songs, artists)
                 
                 data = {
                     'songs': song_data,
@@ -164,9 +215,11 @@ def get_parameters(emotion):
 
     return valence, tempo, energy
 
-def get_songs(request, emotion, popularity):
-    # load yml file with hidden variables into dictionary
-    constants = yaml.load(open('./constants.yml'), Loader=yaml.Loader)
+def get_spotify_connection(request):
+# load yml file with hidden variables into dictionary
+
+    constants_file = './constants.yml'
+    constants = yaml.load(open(constants_file), Loader=yaml.Loader)
 
     spotify_id = constants['database']['client_id']
     spotify_secret = constants['database']['client_secret']
@@ -182,22 +235,77 @@ def get_songs(request, emotion, popularity):
         print(spotify.access_token_expires)
         request.session['token_expiration'] = str(spotify.access_token_expires.toordinal())
         request.session['token'] = str(spotify.access_token)
-    print(spotify.access_token_did_expire)
-    print(spotify.access_token)
-
+   
     headers = {
         "Authorization": f"Bearer {spotify.access_token}"
     }
 
+    return headers
+
+def search_songs(request, text):
+    headers = get_spotify_connection(request)
+    endpoint = "https://api.spotify.com/v1/search"
+
+    data = urlencode({"q": text, "type": "track", "limit": 30})
+
+    lookup_url = f"{endpoint}?{data}"
+    r = requests.get(lookup_url, headers=headers)
+    return r.json()
+
+def search_artists(request, text):
+    headers = get_spotify_connection(request)
+    endpoint = "https://api.spotify.com/v1/search"
+
+    data = urlencode({"q": text, "type": "artist", "limit": 30})
+
+    lookup_url = f"{endpoint}?{data}"
+    r = requests.get(lookup_url, headers=headers)
+    return r.json()
+
+def search_genres(request):
+    headers = get_spotify_connection(request)
+    endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
+    data = urlencode({})
+
+    lookup_url = f"{endpoint}?{data}"
+    r = requests.get(lookup_url, headers=headers)
+    return r.json()
+
+def get_songs(request, emotion, popularity, genres, songs, artists):
+    headers = get_spotify_connection(request)
+    
     endpoint = "https://api.spotify.com/v1/recommendations"
 
     # Get possible genres for seeding
     #endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
 
+    genre_string = ''
+    song_string = ''
+    artist_string = ''
+
+    if (genres == None or len(genres) == 0) and (songs == None or len(songs) == 0) and (artists == None or len(artists) == 0):
+        genre_string = 'pop'
+    else:
+        if (genres != None and len(genres) > 0):
+            for i in range(len(genres)):
+                genre_string += genres[i]
+                if len(genres) - 1 != i:
+                    genre_string += ','
+        if (songs != None and len(songs) > 0):
+            for i in range(len(songs)):
+                        song_string += songs[i]
+                        if len(songs) - 1 != i:
+                            song_string += ','
+        if (artists != None and len(artists) > 0):
+            for i in range(len(artists)):
+                        artist_string += artists[i]
+                        if len(artists) - 1 != i:
+                            artist_string += ','
+
     valence, tempo, energy = get_parameters(emotion)
-    data = urlencode({"seed_genres": "rock", "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35})
+    data = urlencode({"seed_genres": genre_string, "seed_tracks": song_string, "seed_artists": artist_string, "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35})
 
     lookup_url = f"{endpoint}?{data}"
     r = requests.get(lookup_url, headers=headers)
-    #print(r.json())
+    #print(r.json)
     return r.json()

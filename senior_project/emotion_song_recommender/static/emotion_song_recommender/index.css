@@ -121,6 +121,7 @@ input[type="range"] {
   padding-top: 0px;
   margin-top: 0px;
   box-sizing: border-box;
+  height: 100%;
   width: 45%;
   display: inline;
   padding-left: 5px;
@@ -132,12 +133,15 @@ input[type="range"] {
   float: left;
   font-weight: bold;
   overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
 }
 
 .track_artist_title {
   padding-top: 0px;
   margin-top: 0px;
   box-sizing: border-box;
+  height: 100%;
   width: 45%;
   display: inline;
   padding-left: 5px;
@@ -149,12 +153,15 @@ input[type="range"] {
   float: left;
   font-weight: bold;
   overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
 }
 
 .track_count_title {
   padding-top: 0px;
   margin-top: 0px;
   box-sizing: border-box;
+  height: 100%;
   width: 10%;
   display: inline;
   padding-left: 5px;
@@ -166,10 +173,13 @@ input[type="range"] {
   float: left;
   font-weight: bold;
   overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
 }
 
 .track_name {
   box-sizing: border-box;
+  height: 100%;
   width: 45%;
   display: inline;
   padding-left: 5px;
@@ -180,10 +190,13 @@ input[type="range"] {
   text-align: left;
   float: left;
   overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
 }
 
 .track_artist {
   box-sizing: border-box;
+  height: 100%;
   width: 45%;
   display: inline;
   padding-left: 5px;
@@ -194,10 +207,14 @@ input[type="range"] {
   text-align: left;
   float: left;
   overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
+
 }
 
 .track_count {
   box-sizing: border-box;
+  height: 100%;
   width: 10%;
   display: inline;
   padding-left: 5px;
@@ -208,20 +225,22 @@ input[type="range"] {
   text-align: left;
   float: left;
   overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
 }
 
 .song {
-  padding-top: 5px;
-  padding-bottom: 5px;
   width: 100%;
   display: block;
+  overflow: hidden;
+  margin: 0px;
 }
 
 .song_title {
-  padding-top: 5px;
-  padding-bottom: 5px;
   width: 100%;
   display: block;
+  overflow: hidden;
+  margin: 0px;
 }
 
 .song_results {
@@ -247,4 +266,97 @@ input[type="range"] {
 .emotion_prediction {
   color: white;
   text-align: center;
+}
+
+.search_result {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  margin: 0px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.search_result:hover {
+  background-color: #0033CC;
+  cursor: pointer;
+}
+
+.search_results {
+  box-sizing: border-box;
+  display: inline;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: block;
+  overflow: hidden;
+  margin: 0px;
+  display: block;
+  max-height: 25%;
+  overflow-y: scroll;
+  text-align: left;
+  width: 100%;
+}
+
+.select_results {
+  box-sizing: border-box;
+  display: inline;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: block;
+  overflow: hidden;
+  margin: 0px;
+  display: block;
+  max-height: 25%;
+  overflow-y: scroll;
+  text-align: left;
+  width: 100%;
+}
+
+.select_result {
+  box-sizing: border-box;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  margin: 0px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
+}
+
+.select_type {
+  box-sizing: border-box;
+  float: left;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: left;
+  background-color: #0033CC;
+  font-weight: bold;
+  width: 20%;
+}
+
+.select_text {
+  box-sizing: border-box;
+  float: left;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: left;
+  background-color: #73bbff;
+  width: 80%;
+}
+
+.select_result:hover > .select_type {
+  background-color: #73bbff;
+  cursor: pointer;
+}
+
+.select_result:hover > .select_text {
+  background-color: #0033CC;
+  cursor: pointer;
+}
+
+.select_id {
+  display: none;
 }

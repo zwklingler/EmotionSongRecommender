@@ -28,13 +28,33 @@
         <h3 class="settings_text">Allow Explicit Songs</h3>
         <input class="settings" type="checkbox" id="explicit" name="explicit" value="explicit" checked>
         <br><br>
+
+        <!-- Selected Results -->
+        <div id='selected_results' class="selected_results">
+        </div>
+        <br><br>
         
         <h3 class="settings_text">Enter Songs to Base Recommended Songs From</h3>
-        <input class="settings" type="text" placeholder="Song, Artist, or Genre">
-        <input class="settings" type="button" value="Search">
+        <input class="settings" type="text" id="search_text" placeholder="Search By">
+        <select class="settings" id="search_by">
+          <option value="genre">Genres</option>
+          <option value="song">Songs</option>
+          <option value="artist">Artists</option>
+        </select>        
         
-
+        <input class="settings" type="button" value="Search" onclick="search()">
+        <br>
+        <img id="search_spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px" width="100px">
+      
+        <!-- Search Results -->
+        <div id="search_results" class="search_results">
+        </div>
+      
       </div>
+
+     
+
+      
       
       
       <div class="content">
