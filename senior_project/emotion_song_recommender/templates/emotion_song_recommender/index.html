@@ -1,89 +1,108 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static 'emotion_song_recommender/index.js' %}"></script>
-    <title>Emotion Song Recommender</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'emotion_song_recommender/index.css' %}">
-    
-  </head>
-  <body>
-    <div class="container">
-      <content>
-      
-      </content>
-      
-      
-      <div class="header">
-        <h1 class="title">Facial Emotion Song Recommender</h1>
-      </div>
-      
-      
-      <div class="lside">
-        <h3 class="settings_text">Song Popularity</h3>
-        <input class="settings" type="range" min="1" max="100" value="100" class="slider" id="popularity">
-        <br><br>
-        
-        <h3 class="settings_text">Allow Explicit Songs</h3>
-        <input class="settings" type="checkbox" id="explicit" name="explicit" value="explicit" checked>
-        <br><br>
 
-        <!-- Selected Results -->
-        <div id='selected_results' class="selected_results">
-        </div>
-        <br><br>
-        
-        <h3 class="settings_text">Enter Songs to Base Recommended Songs From</h3>
-        <input class="settings" type="text" id="search_text" placeholder="Search By">
-        <select class="settings" id="search_by">
-          <option value="genre">Genres</option>
-          <option value="song">Songs</option>
-          <option value="artist">Artists</option>
-        </select>        
-        
-        <input class="settings" type="button" value="Search" onclick="search()">
-        <br>
-        <img id="search_spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px" width="100px">
-      
-        <!-- Search Results -->
-        <div id="search_results" class="search_results">
-        </div>
-      
-      </div>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="{% static 'emotion_song_recommender/index.js' %}"></script>
+  <title>Emotion Song Recommender</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'emotion_song_recommender/index.css' %}">
+</head>
 
-     
+<body>
+  <div class="container">
+    <content>
 
-      
-      
-      
-      <div class="content">
-        <br>
-        <img class="preview" id="preview">
-        <div class="form_container" method="post" enctype="multipart/form-data">
-          <form id="class_upload">
-            <br>
-            <input type="file" class="image_file" id="image_file" name="image_file" accept=".png, .jpg, .jpeg" onchange="load_file(event)">
-            <br>
-            <br>
-            <input type="button" onclick="upload()" id="upload_button"  name="upload_button" value="Upload">
-            <p class="error" id="error"></p>
-          </form>
-          <img id="spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px" width="100px">
-        </div>
-        <div class="emotion_prediction" id="emotion_prediction"></div>
-        <div class="song_results" id="song_results"></div>
-      </div>
-      
-      
-      <div class="rside">
-      </div>
-      
-      
-      <div class="footer">
-      </div>
-      
-      
+    </content>
+
+
+    <div class="header">
+      <h1 class="title">Facial Emotion Song Recommender</h1>
     </div>
-  </body>
+
+
+    <div class="lside">
+      <div class="settings_header_box">
+        <h1 class="settings_header">Settings</h1>
+      </div>
+
+      <h4 class="settings_text">Song Display</h4>
+      <select class="settings" id="results_method">
+        <option value="albums">Album Images</option>
+        <option value="table">Table of Songs</option>
+      </select>
+      <br><br>
+
+      <h4 class="settings_text">Song Popularity</h4>
+      <input class="settings" type="range" min="1" max="100" value="100" class="slider" id="popularity">
+      <br><br>
+
+      <h4 class="settings_text">Allow Explicit Songs</h4>
+      <input class="settings" type="checkbox" id="explicit" name="explicit" value="explicit" checked>
+      <br><br>
+
+      <!-- Selected Results -->
+      <div id='selected_results' class="selected_results">
+      </div>
+      <br><br>
+
+      <h4 class="settings_text">Select Up to 5 Genres, Songs, or Artists to Base Recommended Songs On</h4>
+      <input class="settings" type="text" id="search_text" placeholder="Search By">
+      <select class="settings" id="search_by">
+        <option value="genre">Genres</option>
+        <option value="song">Songs</option>
+        <option value="artist">Artists</option>
+      </select>
+
+      <input id="search_button" class="settings" type="button" value="Search" onclick="search()">
+      <br>
+      <img id="search_spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px"
+        width="100px">
+
+      <!-- Search Results -->
+      <div id="search_results" class="search_results">
+      </div>
+
+    </div>
+
+
+
+
+
+
+    <div class="content">
+      <br>
+      <img class="preview" id="preview">
+      <div class="form_container" method="post" enctype="multipart/form-data">
+        <form id="class_upload">
+          <br>
+          <input type="file" class="image_file" id="image_file" name="image_file" accept=".png, .jpg, .jpeg"
+            onchange="load_file(event)">
+          <br>
+          <br>
+          <input type="button" onclick="upload()" id="upload_button" name="upload_button" value="Upload">
+          <p class="error" id="error"></p>
+        </form>
+        <img id="spinner" class="spinner" src="{% static 'emotion_song_recommender/spinner.gif' %}" height="100px"
+          width="100px">
+      </div>
+      <div class="emotion_prediction" id="emotion_prediction"></div>
+      <div class="song_results" id="song_results">
+
+
+      </div>
+    </div>
+
+
+    <div class="rside">
+    </div>
+
+
+    <div class="footer">
+    </div>
+
+
+  </div>
+</body>
+
 </html>

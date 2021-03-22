@@ -165,59 +165,53 @@ def get_parameters(emotion):
     tempo = 0
     energy = 0
 
+    max_valence = 0
+    min_valence = 0
+    min_tempo = 0
+    max_tempo = 0
+    max_energy = 0
+    min_energy = 0
+
     if emotion == 'happy':
         max_valence = 1.0
         min_valence = 0.8
         min_tempo = 100
-        max_tempo = 120
+        max_tempo = 140
         max_energy = 1.0
         min_energy = 0.8
 
-        valence = np.random.uniform(min_valence, max_valence)
-        tempo = np.random.uniform(min_tempo, max_tempo)
-        energy = np.random.uniform(min_energy, max_energy)
-
-    if emotion == 'sad':
+    elif emotion == 'sad':
         max_valence = 0.2
         min_valence = 0.0
-        min_tempo = 60
-        max_tempo = 80
+        min_tempo = 40
+        max_tempo = 70
         max_energy = 0.2
         min_energy = 0.0
 
-        valence = np.random.uniform(min_valence, max_valence)
-        tempo = np.random.uniform(min_tempo, max_tempo)
-        energy = np.random.uniform(min_energy, max_energy)
-
-    if emotion == 'angry':
+    elif emotion == 'angry':
         max_valence = 0.2
         min_valence = 0.0
-        min_tempo = 130
-        max_tempo = 150
+        min_tempo = 140
+        max_tempo = 200
         max_energy = 1.0
         min_energy = 0.8
 
-        valence = np.random.uniform(min_valence, max_valence)
-        tempo = np.random.uniform(min_tempo, max_tempo)
-        energy = np.random.uniform(min_energy, max_energy)
-
-    if emotion == 'neutral':
+    elif emotion == 'neutral':
         max_valence = 0.6
         min_valence = 0.4
-        min_tempo = 80
+        min_tempo = 70
         max_tempo = 100
         max_energy = 0.6
         min_energy = 0.4
 
-        valence = np.random.uniform(min_valence, max_valence)
-        tempo = np.random.uniform(min_tempo, max_tempo)
-        energy = np.random.uniform(min_energy, max_energy)
+    valence = np.random.uniform(min_valence, max_valence)
+    tempo = np.random.uniform(min_tempo, max_tempo)
+    energy = np.random.uniform(min_energy, max_energy)
 
     return valence, tempo, energy
 
 def get_spotify_connection(request):
-# load yml file with hidden variables into dictionary
-
+    # load yml file with hidden variables into dictionary
     constants_file = './constants.yml'
     constants = yaml.load(open(constants_file), Loader=yaml.Loader)
 
@@ -303,7 +297,9 @@ def get_songs(request, emotion, popularity, genres, songs, artists):
                             artist_string += ','
 
     valence, tempo, energy = get_parameters(emotion)
+    #valence, tempo, energy, max_valence, min_valence, max_tempo, min_tempo, max_energy, min_energy = get_parameters(emotion)
     data = urlencode({"seed_genres": genre_string, "seed_tracks": song_string, "seed_artists": artist_string, "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35})
+    #data = urlencode({"seed_genres": genre_string, "seed_tracks": song_string, "seed_artists": artist_string, "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35, "max_valence": max_valence, "min_valence": min_valence})
 
     lookup_url = f"{endpoint}?{data}"
     r = requests.get(lookup_url, headers=headers)

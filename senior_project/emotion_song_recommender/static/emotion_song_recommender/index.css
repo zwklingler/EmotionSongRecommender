@@ -40,7 +40,7 @@ input {
   grid-area: lside;
   border-right: solid white 2px;
   border-top: 2px solid white;
-  background-color: darkblue;
+  background-color: #0033CC;
 }
 
 .content {
@@ -75,11 +75,29 @@ input {
   margin-bottom: 5px;
 }
 
+.settings_header {
+  margin: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  max-width: 90%;
+}
+
+.settings_header_box {
+  background-color: #00BBFF;
+  box-sizing: border-box;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  margin-bottom: 10px;
+  border: solid white 1px;
+}
+
 .settings_text {
   margin: 0px;
   padding-left: 5px;
   padding-right: 5px;
   max-width: 90%;
+  color: white;
 }
 
 .settings {
@@ -107,8 +125,8 @@ input[type="range"] {
 }
 
 .preview {
-  max-width: 30%;
-  max-height: 30%;
+  max-width: 25%;
+  max-height: 25%;
   border: solid black 2px;
   visibility: hidden;
 }
@@ -246,7 +264,7 @@ input[type="range"] {
 .song_results {
   overflow-y: auto;
   position: relative;
-  max-height: 45%;
+  max-height: 50%;
   margin-left: 5%;
   margin-right: 5%;
   padding-top: 0px;
@@ -255,11 +273,13 @@ input[type="range"] {
 
 .track_artist:hover {
   background-color: #0033CC;
+  color: white;
   cursor: pointer;
 }
 
 .track_name:hover {
   background-color: #0033CC;
+  color: white;
   cursor: pointer;
 }
 
@@ -282,6 +302,7 @@ input[type="range"] {
 
 .search_result:hover {
   background-color: #0033CC;
+  color: white;
   cursor: pointer;
 }
 
@@ -328,6 +349,7 @@ input[type="range"] {
 
 .select_type {
   box-sizing: border-box;
+  color: white;
   float: left;
   padding-left: 2px;
   padding-right: 2px;
@@ -335,6 +357,7 @@ input[type="range"] {
   background-color: #0033CC;
   font-weight: bold;
   width: 20%;
+  height: calc(1em + 5px);
 }
 
 .select_text {
@@ -345,18 +368,166 @@ input[type="range"] {
   text-align: left;
   background-color: #73bbff;
   width: 80%;
+  height: calc(1em + 5px);
 }
 
+.select_result:hover {
+  border: solid black 1px;
+}
+/*
 .select_result:hover > .select_type {
   background-color: #73bbff;
+  color: black;
   cursor: pointer;
-}
+}*/
 
 .select_result:hover > .select_text {
   background-color: #0033CC;
+  color: white;
   cursor: pointer;
 }
 
 .select_id {
   display: none;
 }
+
+.selected_results {
+  /* 30 px to account for border and padding of each item up to maximum of 5 */
+  max-height: calc((1em * 5) + 30px);
+  overflow: hidden;
+}
+
+.scroller {
+  padding: 0px;
+  margin: auto;
+  height: 100%;
+  max-width: 275px;
+  border: solid black 1px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.slide {
+  display: none;
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.slide_img_container {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+}
+
+.slide_img_container > img {
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+}
+
+.slide_artist {
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
+  display: block;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
+  float: left;
+  overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
+  padding-top: 0px;
+  padding-bottom: 0px;
+
+}
+
+.slide_song {
+  text-align: center;
+  box-sizing: border-box;
+  width: 100%;
+  display: block;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
+  float: left;
+  overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.slide_artist:hover {
+  background-color: #0033CC;
+  color: white;
+  cursor: pointer;
+}
+
+.slide_song:hover {
+  background-color: #0033CC;
+  color: white;
+  cursor: pointer;
+}
+
+.slide_btn_left {
+  border: solid black 2px;
+  transition-duration: 0.2s;
+  top: calc(50% - 20px);
+  left: 0px;
+  padding: 0px;
+  margin: 0px;
+  height: 40px;
+  width: 40px;
+  z-index: 1;
+  position: absolute;
+  background:rgba(0,0,0,0.5);
+  color: white;
+}
+
+.slide_btn_left:hover {
+  top: calc(50% - 20px);
+  left: 0px;
+  padding: 0px;
+  margin: 0px;
+  height: 40px;
+  width: 40px;
+  z-index: 1;
+  position: absolute;
+  background:rgba(0,0,0,0.25);
+  color: white;
+}
+
+.slide_btn_right {
+  border: solid black 2px;
+  transition-duration: 0.2s;
+  top: calc(50% - 20px);
+  right: 0px;
+  height: 40px;
+  width: 40px;
+  z-index: 3;
+  position: absolute;
+  background:rgba(0,0,0,0.25);
+  color: white;
+}
+
+.slide_btn_right:hover {
+  top: calc(50% - 20px);
+  right: 0px;
+  height: 40px;
+  width: 40px;
+  z-index: 3;
+  position: absolute;
+  background:rgba(0,0,0,0.75);
+  color: white;
+}
+

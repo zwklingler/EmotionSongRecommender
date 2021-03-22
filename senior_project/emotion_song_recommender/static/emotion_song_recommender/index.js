@@ -1,3 +1,44 @@
+var slidePosition = 0;
+
+window.onload = function () {
+    document.getElementById("search_text").addEventListener("keyup", searchEnter);
+}
+
+function searchEnter(event) {
+    if (event.code === "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("search_button").click();
+    }
+}
+
+function moveForward() {
+    showDivs(slidePosition, 1)
+}
+
+function moveBackward() {
+    showDivs(slidePosition, -1)
+}
+
+function showDivs(slideIndex, position) {
+    var n = slideIndex + position;
+    var x = document.getElementsByClassName("slide");
+    if (n > x.length - 1) {
+        slidePosition = 0;
+    }
+    else if (n < 0) {
+        slidePosition = x.length - 1;
+    }
+    else {
+        slidePosition = n;
+    }
+
+    x[slideIndex].style.display = "none";
+
+    x[slidePosition].style.display = "block";  
+}
+
 function upload() {
     document.getElementById("spinner").style.display = "inline"
     document.getElementById("error").style.visibility = "hidden"
@@ -36,72 +77,145 @@ function upload() {
                 else {
                     console.log(data)
                     // Create titles
+                    var method = document.getElementById("results_method").value;
                     if (data.songs.tracks.length > 0) {
                         var emotionPrediction = data.emotion
                         document.getElementById("emotion_prediction").innerText = emotionPrediction.charAt(0).toUpperCase() + emotionPrediction.slice(1);
 
-                        let div = document.createElement("div");
-                        div.setAttribute("class", "song_title");
+                        if (method == "table") {
 
-                        let countTitle = document.createElement("span");
-                        countTitle.setAttribute("class", "track_count_title");
-                        countTitle.textContent = "Count";
-                        div.appendChild(countTitle)
+                            let div = document.createElement("div");
+                            div.setAttribute("class", "song_title");
 
-                        let nameTitle = document.createElement("span");
-                        nameTitle.setAttribute("class", "track_name_title");
-                        nameTitle.textContent = "Track Name";
-                        div.appendChild(nameTitle)
+                            let countTitle = document.createElement("span");
+                            countTitle.setAttribute("class", "track_count_title");
+                            countTitle.textContent = "Count";
+                            div.appendChild(countTitle)
 
-                        let artistTitle = document.createElement("span");
-                        artistTitle.setAttribute("class", "track_artist_title");
-                        artistTitle.textContent = "Track Artist"
-                        div.appendChild(artistTitle)
+                            let nameTitle = document.createElement("span");
+                            nameTitle.setAttribute("class", "track_name_title");
+                            nameTitle.textContent = "Track Name";
+                            div.appendChild(nameTitle)
 
-                        document.getElementById("song_results").appendChild(div);
-                        var useExplicit = document.getElementById("explicit").checked
+                            let artistTitle = document.createElement("span");
+                            artistTitle.setAttribute("class", "track_artist_title");
+                            artistTitle.textContent = "Track Artist"
+                            div.appendChild(artistTitle)
 
-                        var songCount = 0;
-                        for (var i = 0; i < data.songs.tracks.length; i++) {
-                            let track = data.songs.tracks[i]
+                            document.getElementById("song_results").appendChild(div);
+                            var useExplicit = document.getElementById("explicit").checked
 
-                            if (useExplicit == true || (useExplicit == false && track.explicit == false)) {
-                                songCount += 1
-                                div = document.createElement("div")
-                                div.setAttribute("class", "song");
+                            var songCount = 0;
+                            for (var i = 0; i < data.songs.tracks.length; i++) {
+                                let track = data.songs.tracks[i]
 
-                                // Track count
-                                let count = document.createElement("span");
-                                count.setAttribute("class", "track_count");
-                                count.textContent = songCount;
-                                div.appendChild(count)
+                                if (useExplicit == true || (useExplicit == false && track.explicit == false)) {
+                                    songCount += 1
+                                    div = document.createElement("div")
+                                    div.setAttribute("class", "song");
 
-                                // Track name
-                                let trackName = document.createElement("span")
-                                trackName.setAttribute("class", "track_name");
-                                trackName.textContent = track.name
-                                // Add On Click
-                                trackName.onclick = function () {
-                                    take_to_page(track.external_urls.spotify);
-                                }
-                                div.appendChild(trackName)
+                                    // Track count
+                                    let count = document.createElement("span");
+                                    count.setAttribute("class", "track_count");
+                                    count.textContent = songCount;
+                                    div.appendChild(count)
 
-                                // Track artist
-                                let trackArtist = document.createElement("span")
-                                trackArtist.setAttribute("class", "track_artist");
-                                for (var j = 0; j < track.artists.length; j++) {
-                                    if (j != 0) {
-                                        trackArtist.textContent += ", "
+                                    // Track name
+                                    let trackName = document.createElement("span")
+                                    trackName.setAttribute("class", "track_name");
+                                    trackName.textContent = track.name
+                                    // Add On Click
+                                    trackName.onclick = function () {
+                                        take_to_page(track.external_urls.spotify);
                                     }
-                                    trackArtist.textContent += track.artists[j].name
-                                }
-                                trackArtist.onclick = function () {
-                                    take_to_page(track.artists[0].external_urls.spotify);
-                                }
-                                div.appendChild(trackArtist)
+                                    div.appendChild(trackName)
 
-                                document.getElementById("song_results").appendChild(div);
+                                    // Track artist
+                                    let trackArtist = document.createElement("span")
+                                    trackArtist.setAttribute("class", "track_artist");
+                                    for (var j = 0; j < track.artists.length; j++) {
+                                        if (j != 0) {
+                                            trackArtist.textContent += ", "
+                                        }
+                                        trackArtist.textContent += track.artists[j].name
+                                    }
+                                    trackArtist.onclick = function () {
+                                        take_to_page(track.artists[0].external_urls.spotify);
+                                    }
+                                    div.appendChild(trackArtist)
+
+                                    document.getElementById("song_results").appendChild(div);
+                                }
+                            }                           
+                        }
+                        else {
+                            slidePosition = 0;
+                            let div = document.createElement("div");
+                            div.setAttribute("class", "scroller");
+                            div.setAttribute("id", "scroller");
+
+                            
+                            let leftButton = document.createElement("button");
+                            leftButton.setAttribute("class", "slide_btn_left");
+                            leftButton.addEventListener("click", moveBackward);
+                            leftButton.textContent = "❮";
+                            div.appendChild(leftButton)
+
+
+                            for (var i = 0; i < data.songs.tracks.length; i++) {
+                                let track = data.songs.tracks[i]
+
+                                let slide = document.createElement("div");
+                                slide.setAttribute("class", "slide");
+                                if (i == 0) {
+                                    slide.style.display = "block"
+                                }
+                                
+
+                                let imageContainer = document.createElement("div");
+                                imageContainer.setAttribute("class", "slide_img_container")
+
+                                let image = document.createElement("img")
+                                image.src = track.album.images[0].url;
+                                imageContainer.appendChild(image)
+
+                                slide.appendChild(imageContainer)
+
+                                  // Track artist
+                                  let trackArtist = document.createElement("span")
+                                  trackArtist.setAttribute("class", "slide_artist");
+                                  for (var j = 0; j < track.artists.length; j++) {
+                                      if (j != 0) {
+                                          trackArtist.textContent += ", "
+                                      }
+                                      trackArtist.textContent += track.artists[j].name
+                                  }
+                                  trackArtist.onclick = function () {
+                                      take_to_page(track.artists[0].external_urls.spotify);
+                                  }
+                                  slide.appendChild(trackArtist)
+
+                                  // Track name
+                                  let trackName = document.createElement("span")
+                                  trackName.setAttribute("class", "slide_song");
+                                  trackName.textContent = track.name
+                                  // Add On Click
+                                  trackName.onclick = function () {
+                                      take_to_page(track.external_urls.spotify);
+                                  }
+                                  slide.appendChild(trackName)
+
+                                div.appendChild(slide)                            
                             }
+
+
+                            let rightButton = document.createElement("button");
+                            rightButton.setAttribute("class", "slide_btn_right");
+                            rightButton.addEventListener("click", moveForward);
+                            rightButton.textContent = "❯";
+                            div.appendChild(rightButton)
+
+                            document.getElementById("song_results").appendChild(div);
                         }
                         /*
                         span = document.createElement("span")
@@ -184,40 +298,53 @@ function getArtists() {
 }
 
 function removeSelected(text, type) {
-    alert(text + type)
+    var capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+    selected = document.getElementById("selected_results")
+    if (selected.childNodes.length > 0) {
+        for (var i = 0; i < selected.childNodes.length; i++) {
+            if (selected.childNodes[i].childNodes.length >= 2) {
+                if (selected.childNodes[i].childNodes[0].innerText == capitalizedType && selected.childNodes[i].childNodes[1].innerText == text) {
+                    objectToRemove = document.getElementById("selected_results").childNodes[i]
+                    document.getElementById("selected_results").removeChild(objectToRemove)
+                    objectToRemove.remove()
+                }
+            }
+        }
+    }
 }
 
 function addToSeed(text, type, spotifyId) {
-
     var selected = document.getElementById("selected_results")
+    if (selected.childNodes.length < 6) {
+        div = document.createElement("div")
+        div.setAttribute("class", "select_result");
 
-    div = document.createElement("div")
-    div.setAttribute("class", "select_result");
+        let selectType = document.createElement("span")
+        selectType.setAttribute("class", "select_type")
+        selectType.innerText = type.charAt(0).toUpperCase() + type.slice(1);
+        div.appendChild(selectType)
 
-    let selectType = document.createElement("span")
-    selectType.setAttribute("class", "select_type")
-    selectType.innerText = type.charAt(0).toUpperCase() + type.slice(1);
-    div.appendChild(selectType)
+        let selectText = document.createElement("span")
+        selectText.setAttribute("class", "select_text")
+        selectText.innerText = text
+        div.appendChild(selectText)
 
-    let selectText = document.createElement("span")
-    selectText.setAttribute("class", "select_text")
-    selectText.innerText = text
-    div.appendChild(selectText)
+        if (spotifyId != null) {
+            let selectId = document.createElement("span")
+            selectId.setAttribute("class", "select_id")
+            selectId.innerText = spotifyId
+            div.appendChild(selectId)
+        }
 
-    if (spotifyId != null)
-    {
-        let selectId = document.createElement("span")
-        selectId.setAttribute("class", "select_id")
-        selectId.innerText = spotifyId
-        div.appendChild(selectId)
+        div.onclick = function () {
+            removeSelected(text, type);
+        }
+
+        document.getElementById("selected_results").appendChild(div)
     }
+    else {
 
-    div.onclick = function () {
-        removeSelected(text, type);
     }
-
-    document.getElementById("selected_results").appendChild(div)
-    document.getElementById("selected_results").style.display = "inline";
 }
 
 function search() {
