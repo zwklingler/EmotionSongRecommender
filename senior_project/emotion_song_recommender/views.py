@@ -41,10 +41,12 @@ def search(request):
 
 
         try:
+            # Get data passed by site
             search_by = request.POST.get('search_by')
             search_text = request.POST.get('search_text')
             data = {}
-            if (search_text != None and search_by != None):
+            if (search_text != None and search_by != None and search_text != "" and search_by != ""):
+                # Determine whether there are any seeds
                 if (search_by == 'song'):
                     song_data = search_songs(request, search_text)
                     data = {
@@ -63,12 +65,10 @@ def search(request):
                             genre_data.append(genre)
                     data = {
                         'genres': genre_data
-                    }
-
-               
+                    }               
             else:
                 data = {
-                    'error': 'Enter data to search.'
+                    'error': 'Enter data to search by.'
                 }        
         except:
             data = {
@@ -79,6 +79,7 @@ def search(request):
                 'error': 'No results were found. Try again.'
             }
         
+        # Return JSON data
         return JsonResponse(data)
 
 @csrf_exempt 
@@ -86,8 +87,8 @@ def get_emotion_songs(request):
     if request.method == 'POST':
 
         data = {}
-        popularity = request.POST.get('popularity')
 
+        # Get data passed by site
         genres = json.loads(request.POST.get('genres'))
         songs = json.loads(request.POST.get('songs'))
         artists = json.loads(request.POST.get('artists'))
@@ -100,14 +101,15 @@ def get_emotion_songs(request):
         face_locations = face_recognition.face_locations(image)
         if (len(face_locations) < 1):
             data = {
-                'error': 'No face was found in the image',
+                'error': 'No face was found in the image. Try a different image.',
             }
         else:
             try:
+                # Prepare image for neural network
                 top, right, bottom, left = face_locations[0]
                 face_image = image[top:bottom, left:right]
                 gray_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
-
+                
                 image = cv2.resize(gray_image, (48,48))
 
                 image = image.reshape(1, 48, 48, 1)
@@ -115,14 +117,17 @@ def get_emotion_songs(request):
 
                 model = load_model('model.h5')
 
+                # Predict emotion
                 predictions = model.predict(image)
 
                 max_index = np.argmax(predictions)
 
+                # Determine corresponding emotion
                 emotion_detection = ('angry', 'happy', 'sad', 'neutral')
                 emotion_prediction = emotion_detection[max_index] 
                 
-                song_data = get_songs(request, emotion_prediction, popularity, genres, songs, artists)
+                # Get song data
+                song_data = get_songs(request, emotion_prediction, genres, songs, artists)
                 
                 data = {
                     'songs': song_data,
@@ -135,8 +140,9 @@ def get_emotion_songs(request):
                 '''
             except:
                 data = {
-                    'error': 'An error occurred, try again',
+                    'error': 'An error occurred, try again.',
                 }
+        # Return JSON data
         return JsonResponse(data)
 
 def _grab_image(path=None, stream=None, url=None):
@@ -161,9 +167,11 @@ def _grab_image(path=None, stream=None, url=None):
 	return image
 
 def get_parameters(emotion):
+    # Determine valence, tempo, energy, and danceability of based upon emotion
     valence = 0
     tempo = 0
     energy = 0
+    danceability = 0
 
     max_valence = 0
     min_valence = 0
@@ -171,6 +179,8 @@ def get_parameters(emotion):
     max_tempo = 0
     max_energy = 0
     min_energy = 0
+    min_danceability = 0
+    max_danceability = 0
 
     if emotion == 'happy':
         max_valence = 1.0
@@ -179,6 +189,8 @@ def get_parameters(emotion):
         max_tempo = 140
         max_energy = 1.0
         min_energy = 0.8
+        min_danceability = 0.7
+        max_danceability = 1.0
 
     elif emotion == 'sad':
         max_valence = 0.2
@@ -187,28 +199,35 @@ def get_parameters(emotion):
         max_tempo = 70
         max_energy = 0.2
         min_energy = 0.0
+        min_danceability = 0.0
+        max_danceability = 0.2
 
     elif emotion == 'angry':
         max_valence = 0.2
         min_valence = 0.0
-        min_tempo = 140
-        max_tempo = 200
+        min_tempo = 170
+        max_tempo = 210
         max_energy = 1.0
         min_energy = 0.8
+        min_danceability = 0.0
+        max_danceability = 0.2
 
     elif emotion == 'neutral':
-        max_valence = 0.6
-        min_valence = 0.4
-        min_tempo = 70
-        max_tempo = 100
-        max_energy = 0.6
-        min_energy = 0.4
+        max_valence = 0.7
+        min_valence = 0.3
+        min_tempo = 60
+        max_tempo = 110
+        max_energy = 0.7
+        min_energy = 0.5
+        min_danceability = 0.3
+        max_danceability = 0.7
 
     valence = np.random.uniform(min_valence, max_valence)
     tempo = np.random.uniform(min_tempo, max_tempo)
     energy = np.random.uniform(min_energy, max_energy)
+    danceability = np.random.uniform(min_danceability, max_danceability)
 
-    return valence, tempo, energy
+    return valence, tempo, energy, danceability
 
 def get_spotify_connection(request):
     # load yml file with hidden variables into dictionary
@@ -218,6 +237,7 @@ def get_spotify_connection(request):
     spotify_id = constants['database']['client_id']
     spotify_secret = constants['database']['client_secret']
 
+    # Get token and check if it has expired
     spotify = spotifyAPI(spotify_id, spotify_secret)
     if 'token_expiration' in request.session:
         spotify.access_token_expires = datetime.datetime.fromtimestamp(int(request.session['token_expiration']))
@@ -234,9 +254,11 @@ def get_spotify_connection(request):
         "Authorization": f"Bearer {spotify.access_token}"
     }
 
+    # Return API header information
     return headers
 
 def search_songs(request, text):
+    # Get the header information
     headers = get_spotify_connection(request)
     endpoint = "https://api.spotify.com/v1/search"
 
@@ -247,6 +269,7 @@ def search_songs(request, text):
     return r.json()
 
 def search_artists(request, text):
+    # Get the header information
     headers = get_spotify_connection(request)
     endpoint = "https://api.spotify.com/v1/search"
 
@@ -257,6 +280,7 @@ def search_artists(request, text):
     return r.json()
 
 def search_genres(request):
+    # Get the header information
     headers = get_spotify_connection(request)
     endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
     data = urlencode({})
@@ -265,18 +289,18 @@ def search_genres(request):
     r = requests.get(lookup_url, headers=headers)
     return r.json()
 
-def get_songs(request, emotion, popularity, genres, songs, artists):
+def get_songs(request, emotion, genres, songs, artists):
+    # Get the header information
     headers = get_spotify_connection(request)
     
     endpoint = "https://api.spotify.com/v1/recommendations"
 
-    # Get possible genres for seeding
-    #endpoint = "https://api.spotify.com/v1/recommendations/available-genre-seeds"
-
+    # Possible stings for seeding
     genre_string = ''
     song_string = ''
     artist_string = ''
 
+    # Convert seed lists to strings
     if (genres == None or len(genres) == 0) and (songs == None or len(songs) == 0) and (artists == None or len(artists) == 0):
         genre_string = 'pop'
     else:
@@ -296,12 +320,12 @@ def get_songs(request, emotion, popularity, genres, songs, artists):
                         if len(artists) - 1 != i:
                             artist_string += ','
 
-    valence, tempo, energy = get_parameters(emotion)
-    #valence, tempo, energy, max_valence, min_valence, max_tempo, min_tempo, max_energy, min_energy = get_parameters(emotion)
-    data = urlencode({"seed_genres": genre_string, "seed_tracks": song_string, "seed_artists": artist_string, "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35})
-    #data = urlencode({"seed_genres": genre_string, "seed_tracks": song_string, "seed_artists": artist_string, "target_valence": valence, "target_tempo": tempo, "target_popularity": popularity, "target_energy": energy, "limit": 30, "max_liveness": 0.35, "max_valence": max_valence, "min_valence": min_valence})
+    # Get song information for specified emotion
+    valence, tempo, energy, danceability = get_parameters(emotion)
+
+    # Format API call
+    data = urlencode({"seed_genres": genre_string, "seed_tracks": song_string, "seed_artists": artist_string, "target_valence": valence, "target_tempo": tempo, "target_energy": energy, "target_danceability": danceability, "limit": 30, "max_liveness": 0.35})
 
     lookup_url = f"{endpoint}?{data}"
     r = requests.get(lookup_url, headers=headers)
-    #print(r.json)
     return r.json()

@@ -18,7 +18,7 @@ body{
     "lside content content";
 
   /*grid-template-columns: 400px 1fr 400px;*/
-  grid-template-columns: 275px 1fr 400px;
+  grid-template-columns: 325px 1fr 400px;
   grid-template-rows: auto 1fr auto;
   /*grid-gap: 10px;*/
 
@@ -41,6 +41,7 @@ input {
   border-right: solid white 2px;
   border-top: 2px solid white;
   background-color: #0033CC;
+  text-align: center;
 }
 
 .content {
@@ -73,13 +74,14 @@ input {
   margin-left: 15px;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-size: 3em;
 }
 
 .settings_header {
   margin: 0px;
   padding-left: 5px;
   padding-right: 5px;
-  max-width: 90%;
+  max-width: 100%;
 }
 
 .settings_header_box {
@@ -96,12 +98,16 @@ input {
   margin: 0px;
   padding-left: 5px;
   padding-right: 5px;
-  max-width: 90%;
+  max-width: 100%;
   color: white;
+  font-size: 1em;
 }
 
 .settings {
-  max-width: 90%
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
 }
 
 input[type="range"] {
@@ -125,10 +131,12 @@ input[type="range"] {
 }
 
 .preview {
-  max-width: 25%;
+  max-width: 35%;
   max-height: 25%;
   border: solid black 2px;
   visibility: hidden;
+  padding: 0px;
+  margin-top: 5px;
 }
 
 .spinner {
@@ -247,6 +255,29 @@ input[type="range"] {
   white-space: nowrap;
 }
 
+.track_count_hover {
+  box-sizing: border-box;
+  height: 100%;
+  width: 10%;
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: black;
+  background-color: #73bbff;
+  border: solid white 1px;
+  text-align: left;
+  float: left;
+  overflow: hidden;
+  margin: 0px;
+  white-space: nowrap;
+}
+
+.track_count_hover:hover {
+  background-color: #0033CC;
+  color: white;
+  cursor: pointer;
+}
+
 .song {
   width: 100%;
   display: block;
@@ -264,7 +295,7 @@ input[type="range"] {
 .song_results {
   overflow-y: auto;
   position: relative;
-  max-height: 50%;
+  max-height: 45%;
   margin-left: 5%;
   margin-right: 5%;
   padding-top: 0px;
@@ -286,6 +317,7 @@ input[type="range"] {
 .emotion_prediction {
   color: white;
   text-align: center;
+  font-weight: bold;
 }
 
 .search_result {
@@ -296,8 +328,7 @@ input[type="range"] {
   color: black;
   background-color: #73bbff;
   border: solid white 1px;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 0px;
 }
 
 .search_result:hover {
@@ -309,16 +340,18 @@ input[type="range"] {
 .search_results {
   box-sizing: border-box;
   display: inline;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 0px;
+  margin-right: 10px;
   display: block;
   overflow: hidden;
-  margin: 0px;
+  margin-top: 0px;
+  margin-bottom: 10px;
   display: block;
-  max-height: 25%;
+  max-height: 30%;
   overflow-y: scroll;
   text-align: left;
   width: 100%;
+
 }
 
 .select_results {
@@ -401,14 +434,16 @@ input[type="range"] {
   padding: 0px;
   margin: auto;
   height: 100%;
-  max-width: 275px;
+  max-width: 240px;
   border: solid black 1px;
   display: flex;
   justify-content: space-between;
   position: relative;
+  box-sizing: border-box;
 }
 
 .slide {
+  box-sizing: border-box;
   display: none;
   padding: 0px;
   margin: 0px;
@@ -417,14 +452,39 @@ input[type="range"] {
 }
 
 .slide_img_container {
+  box-sizing: border-box;
   margin-left: auto;
   margin-right: auto;
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  border: solid black 1px;
+}
+
+.slide_img_container_hover {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  border: solid black 1px;
+}
+
+.slide_img_container_hover:hover {
+  cursor: pointer;
+  border: solid white 1px;
+}
+
+.slide_img_container_hover > img {
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
   padding: 0px;
 }
 
 .slide_img_container > img {
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
   padding: 0px;
@@ -531,3 +591,66 @@ input[type="range"] {
   color: white;
 }
 
+/* Cell Phone Styles */
+@media only screen and (max-device-width: 480px) {
+  .container {
+    display: grid;
+  
+    grid-template-areas:
+      "header"
+      "content"
+      "lside";
+  
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .lside {
+    overflow-y: scroll;
+  }
+
+  .search_result {
+    max-width: 350px;
+    text-align: center;
+    margin: auto;
+  }
+
+  .select_result {
+    max-width: 350px;
+    text-align: center;
+    margin: auto;
+  }
+
+  .select_text {
+    text-align: center;
+  }
+
+  .song_results {
+    max-height: 55%;
+    margin-bottom: 5px;
+  }
+}
+
+.toggle_button {
+  display: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color: white;
+  background-color: black;
+  border: solid black 2px;
+  outline: none;
+}
+
+.toggle_button:hover {
+  border: solid white 2px;
+  cursor: pointer;
+}
