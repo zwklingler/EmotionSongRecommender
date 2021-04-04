@@ -98,19 +98,32 @@ def get_emotion_songs(request):
         while image.shape[0] > 500 and image.shape[1] > 500:
             image = cv2.resize(image, (image.shape[0] // 2, image.shape[1] // 2))
 
-        face_locations = face_recognition.face_locations(image)
-        if (len(face_locations) < 1):
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        faces = face_haar_cascade.detectMultiScale(gray_image)
+
+        
+
+        if (len(faces) < 1):
             data = {
                 'error': 'No face was found in the image. Try a different image.',
             }
         else:
             try:
+                top = 0
+                bottom = 0
+                right = 0
+                left = 0
+                for (x, y, w, h) in faces:
+                    top = y
+                    bottom = y + h
+                    left = x
+                    right = x + w       
                 # Prepare image for neural network
-                top, right, bottom, left = face_locations[0]
-                face_image = image[top:bottom, left:right]
-                gray_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+                face_image = gray_image[top:bottom, left:right]
                 
-                image = cv2.resize(gray_image, (48,48))
+                image = cv2.resize(face_image, (48,48))
 
                 image = image.reshape(1, 48, 48, 1)
 
@@ -133,11 +146,7 @@ def get_emotion_songs(request):
                     'songs': song_data,
                     'emotion': emotion_prediction
                 }
-                '''
-                data = {
-                    'emotion': emotion_prediction,
-                }
-                '''
+
             except:
                 data = {
                     'error': 'An error occurred, try again.',
