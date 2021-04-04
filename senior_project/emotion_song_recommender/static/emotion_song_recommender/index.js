@@ -125,12 +125,20 @@ function resetSpotifyConnect()
     player = null;
 }
 
+function resetSpotifyConnectKeepSongs()
+{
+    document.getElementById("spotify_connect").style.display = "block";
+    token = null;
+    player = null;
+}
+
+
 function isConnected(token, device_id) {
     if (token != null && device_id != null) {
         return true;
     }
     else {
-        resetSpotifyConnect();
+        resetSpotifyConnectKeepSongs();
         return false;
     }
 }
