@@ -125,20 +125,12 @@ function resetSpotifyConnect()
     player = null;
 }
 
-function resetSpotifyConnectKeepSongs()
-{
-    document.getElementById("spotify_connect").style.display = "block";
-    token = null;
-    player = null;
-}
-
 function isConnected(token, device_id) {
     if (token != null && device_id != null) {
         return true;
     }
     else {
-
-        resetSpotifyConnectKeepSongs();
+        resetSpotifyConnect();
         return false;
     }
 }
@@ -223,8 +215,9 @@ function upload() {
                     // Create titles
                     var method = document.getElementById("results_method").value;
                     if (data.songs.tracks.length > 0) {
-                        let emotionPrediction = data.emotion
+                        var emotionPrediction = data.emotion
                         document.getElementById("emotion_prediction").innerText = emotionPrediction.charAt(0).toUpperCase() + emotionPrediction.slice(1);
+
                         if (method == "table") {
 
                             let div = document.createElement("div");
