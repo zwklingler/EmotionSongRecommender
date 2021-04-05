@@ -549,11 +549,12 @@ function search() {
                         trackArtist += track.artists[j].name
                     }
                     let text = track.name
+                    let trackID = track.id
                     searchItem.innerText = track.name + " by " + trackArtist;
                     div.appendChild(searchItem)
                     // Add On Click
                     div.onclick = function () {
-                        addToSeed(text, "song", track.id);
+                        addToSeed(text, "song", trackID);
                     }
                     document.getElementById("search_results").appendChild(div);
                 }
